@@ -1,0 +1,22 @@
+---
+- name: AWS Security Audit
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: installing virutualenv, python and pip
+      apt:
+         name: "{{ item }}"
+         state: present
+         #update_cache: yes
+      become: true
+      with_items:
+         - python
+         - python3-pip
+         - awscli
+
+    - name: install scoutsuite
+      pip:
+        name: scoutsuite
+        state: present
+    - name: execution of scoutsuite
+      command: /home/varun/.local/bin/scout aws --profile security_automation -f

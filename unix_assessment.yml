@@ -1,0 +1,34 @@
+---
+- hosts: [ansible_node1]
+  become: true
+  tasks:
+   - name: adding repo key
+     apt_key:
+       keyserver: keyserver.ubuntu.com
+       id: 013baa07180c50a7101097ef9de922f1c2fde6c4
+       state: present
+   - name: prequisites
+     package:
+       name:
+        - apt-transport-https
+        - lynis
+        - kbtin
+       update_cache: yes
+       state: present
+   - name: ansi2html installation
+     pip:
+       name: ansi2html
+   - name: adding repo
+     apt_repository:
+       repo: "deb https://packages.cisofy.com/community/lynis/deb/ stable main"
+       state: present
+   - name: Starting security assessment of the server.
+     shell: lynis audit system | ansi2html -la > /tmp/assessment.html
+   - name: downloading report locally
+     fetch:
+      src: /tmp/assessment.html
+      dest: ./{{ inventory_hostname }}-assessment-report-{{ansible_date_time.date }}.html
+      flat: yes
+   - name: report location
+     debug:
+      msg: "Report can be found at ./{{ inventory_hostname }}-assessment-report-{{ansible_date_time.date }}.html"
