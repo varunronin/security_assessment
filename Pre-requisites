@@ -1,0 +1,6 @@
+Unix server assessement:
+  > SSH key based authentication confifured.
+  > enabled password less privilege escalation for the ansible service account.
+aws cloud infra security assessment:
+  > Create a user and assign the aws roles referred to in the repository
+  > Configure the aws_access_key_id & aws_secret_access_key in the Control node.
